@@ -1,0 +1,16 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files (built binaries)
+*.jar
+*.war
+*.ear
+
+# Build directories (common for Maven, Gradle, or IDEs)
+target/
+bin/
+build/
+out/
