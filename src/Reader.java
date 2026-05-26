@@ -2,16 +2,14 @@ public class Reader {
     private String readerID;
     private String fullName;
     private String email;
-    private ReaderType type;
 
     // Theo dõi số lượng sách đã mượn
     private int borrowedCount = 0;
 
-    public Reader(String readerID, String fullName, String email, ReaderType type) {
+    public Reader(String readerID, String fullName, String email) {
         this.readerID = readerID;
         this.fullName = fullName;
         this.email = email;
-        this.type = type;
     }
 
     public String getReaderID() {
@@ -34,23 +32,16 @@ public class Reader {
         this.email = email;
     }
 
-    public ReaderType getType() {
-        return type;
+    public int getMaxBorrow() {
+        return 0;
     }
 
-    public void setType(ReaderType type) {
-        this.type = type;
-    }
-
-
-    // Kiểm tra số lượng sách đã mượn và kiểm tra xem có mượn được nữa không
     public int getBorrowedCount() {
         return borrowedCount;
     }
 
     public int getRemainingBorrowAllowance() {
-        if (type == null) return 0;
-        return Math.max(0, type.getBorrowLimit() - borrowedCount);
+        return Math.max(0, getMaxBorrow() - borrowedCount);
     }
 
     public boolean canBorrow() {
@@ -69,10 +60,14 @@ public class Reader {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Doc gia ID: " + readerID + 
+               "\nHo va ten: " + fullName + 
+               "\nEmail: " + email;
+    }
+
     public void showInfo() {
-        System.out.println("Doc gia ID: " + readerID);
-        System.out.println("Ho va ten: " + fullName);
-        System.out.println("Email: " + email);
-        System.out.println("Loai doc gia: " + ReaderType.nameOf(type));
+        System.out.println(toString());
     }
 }
