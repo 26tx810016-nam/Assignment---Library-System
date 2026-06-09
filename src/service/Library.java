@@ -1,11 +1,32 @@
+package service;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Book;
+import model.Reader;
+import model.BorrowSlip;
+import policy.LateFeePolicy;
+import policy.StandardFeePolicy;
+
 public class Library {
-    private final List<Book> books = new ArrayList<>();
-    private final List<Reader> readers = new ArrayList<>();
-    private final List<BorrowSlip> borrowSlips = new ArrayList<>();
+    private final List<Book> books;
+    private final List<Reader> readers;
+    private final List<BorrowSlip> borrowSlips;
+    private LateFeePolicy feePolicy;
+
+    public Library() {
+        this.books = new ArrayList<>();
+        this.readers = new ArrayList<>();
+        this.borrowSlips = new ArrayList<>();
+        this.feePolicy = new StandardFeePolicy();
+    }
+
+    public void setFeePolicy(LateFeePolicy policy) {
+        this.feePolicy = policy;
+        System.out.println("Cap nhat chinh sach phi phat: " + policy.getPolicyName());
+    }
 
     public void addBook(Book book) {
         books.add(book);
@@ -83,5 +104,33 @@ public class Library {
         System.out.println("Books: " + books.size());
         System.out.println("Readers: " + readers.size());
         System.out.println("Borrow slips: " + borrowSlips.size());
+    }
+
+    public void calculateTotalFees(int daysLate) {
+        System.out.println("=== PHI PHAT TRE HAN (" + daysLate + " ngay) ===");
+        double total = 0;
+        for (Reader r : readers) {
+            double baseFee = r.calculateLateFee(daysLate);
+            double adjustedFee = feePolicy.applyPolicy(baseFee);
+            System.out.printf("%-25s | Base: %,.0f | Sau CS: %,.0f VND%n",
+                    r.getFullName(), baseFee, adjustedFee);
+            total += adjustedFee;
+        }
+        System.out.printf("Tong phi phat (%s): %,.0f VND%n", feePolicy.getPolicyName(), total);
+    }
+
+    public void showAllReaders() {
+        System.out.println("==== DANH SACH DOC GIA ====");
+        for (Reader r : readers) {
+            System.out.println(r.getInfo());
+        }
+    }
+
+    public void showAllBooks() {
+        System.out.println("==== DANH SACH SACH ====");
+        for (Book book : books) {
+            book.showInfo();
+            System.out.println();
+        }
     }
 }

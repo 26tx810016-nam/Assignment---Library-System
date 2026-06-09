@@ -1,4 +1,11 @@
+package service;
+
 import java.time.LocalDate;
+
+import model.Reader;
+import model.Book;
+import model.BorrowSlip;
+import model.Fine;
 
 public class Librarian {
     private String librarianID;

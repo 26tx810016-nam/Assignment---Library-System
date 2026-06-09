@@ -1,16 +1,24 @@
+package model;
+
 public class Book {
     private String bookID;
     private String name;
     private String author;
     private int publishDate;
     private int quantity;
+    private boolean referenceOnly;
 
     public Book(String bookID, String name, String author, int publishDate, int quantity) {
+        this(bookID, name, author, publishDate, quantity, false);
+    }
+
+    public Book(String bookID, String name, String author, int publishDate, int quantity, boolean referenceOnly) {
         this.bookID = bookID;
         this.name = name;
         this.author = author;
         this.publishDate = publishDate;
         this.quantity = quantity;
+        this.referenceOnly = referenceOnly;
     }
 
     public String getBookID() {
@@ -45,6 +53,10 @@ public class Book {
         return quantity;
     }
 
+    public boolean isReferenceOnly() {
+        return referenceOnly;
+    }
+
     public void increaseQuantity() {
             quantity++;
     }
@@ -63,5 +75,6 @@ public class Book {
         System.out.println("Tac gia: " + author);
         System.out.println("Ngay xuat ban: " + publishDate);
         System.out.println("So luong: " + quantity);
+        System.out.println("Sach tham khao: " + (referenceOnly ? "Co" : "Khong"));
     }
 }
