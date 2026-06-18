@@ -1,17 +1,38 @@
 package model;
 
-public abstract class Reader {
+import java.util.ArrayList;
+import java.util.List;
+import service.Notifiable;
+
+public abstract class Reader implements Notifiable {
     protected String readerID;
     protected String fullName;
     protected String email;
 
     // Theo dõi số lượng sách đã mượn
     private int borrowedCount = 0;
+    
+    // Theo dõi lịch sử thông báo
+    private final List<String> notificationHistory;
 
     protected Reader(String readerID, String fullName, String email) {
         this.readerID = readerID;
         this.fullName = fullName;
         this.email = email;
+        this.notificationHistory = new ArrayList<>();
+    }
+
+    @Override
+    public void sendNotification(String message) {
+        if (message != null && !message.isEmpty()) {
+            notificationHistory.add(message);
+            System.out.println("[" + readerID + "] " + message);
+        }
+    }
+
+    @Override
+    public List<String> getNotificationHistory() {
+        return new ArrayList<>(notificationHistory);
     }
 
     public abstract int getMaxBorrow();

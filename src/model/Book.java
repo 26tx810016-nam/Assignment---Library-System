@@ -1,6 +1,8 @@
 package model;
 
-public class Book {
+import service.Borrowable;
+
+public class Book implements Borrowable {
     private String bookID;
     private String name;
     private String author;
@@ -8,17 +10,25 @@ public class Book {
     private int quantity;
     private boolean referenceOnly;
 
-    public Book(String bookID, String name, String author, int publishDate, int quantity) {
-        this(bookID, name, author, publishDate, quantity, false);
+    private String currentBorrowerId; // null neu chua ai muon 
+    private String borrowDate; 
+
+    public Book(String bookID, String name, String author) {
+        this(bookID, name, author, 0, 1, false, null);
     }
 
     public Book(String bookID, String name, String author, int publishDate, int quantity, boolean referenceOnly) {
+        this(bookID, name, author, publishDate, quantity, referenceOnly, null);
+    }
+
+    public Book(String bookID, String name, String author, int publishDate, int quantity, boolean referenceOnly, String currentBorrowerId) {
         this.bookID = bookID;
         this.name = name;
         this.author = author;
         this.publishDate = publishDate;
         this.quantity = quantity;
         this.referenceOnly = referenceOnly;
+        this.currentBorrowerId = null;
     }
 
     public String getBookID() {
@@ -68,6 +78,33 @@ public class Book {
             System.out.println("Khong du so luong sach.");
         }
     }
+
+    @Override 
+    public void borrowBy(String readerId, String date) { 
+        if (!isAvailable()) { 
+            System.out.println("Book '" + name + "' is not available."); 
+            return; 
+        } 
+
+        this.currentBorrowerId = readerId; 
+        this.borrowDate        = date; 
+
+        System.out.println("Book '" + name + "' borrowed by " + readerId); 
+    } 
+
+    @Override 
+    public void returnBook(String date) { 
+        System.out.println("Book '" + name + "' returned on " + date); 
+
+        this.currentBorrowerId = null; 
+        this.borrowDate        = null; 
+    } 
+
+    @Override 
+    public boolean isAvailable() { return currentBorrowerId == null; } 
+
+    @Override 
+    public String getBorrowerId() { return currentBorrowerId; } 
 
     public void showInfo() {
         System.out.println("ID: " + bookID);

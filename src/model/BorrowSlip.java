@@ -1,18 +1,18 @@
 package model;
 
 import java.time.LocalDate;
+import service.Returnable;
+import service.Borrowable;
 
-public class BorrowSlip {
+public class BorrowSlip implements Returnable, Borrowable {
     private Reader reader;
     private Book book;
     private LocalDate borrowDate;
     private LocalDate returnDate;
 
-    public BorrowSlip(Reader reader, Book book, LocalDate borrowDate, LocalDate returnDate) {
+    public BorrowSlip(Reader reader, Book book) {
         this.reader = reader;
         this.book = book;
-        this.borrowDate = borrowDate;
-        this.returnDate = returnDate;
     }
 
     public Reader getReader() {
@@ -27,16 +27,48 @@ public class BorrowSlip {
         return borrowDate;
     }
 
-    public LocalDate getReturnDate() {
-        return returnDate;
+    @Override
+    public String getReturnDate() {
+        return returnDate == null ? null : returnDate.toString();
+    }
+
+    @Override
+    public void confirmReturn(String date) {
+        if (date == null) {
+            this.returnDate = null;
+            return;
+        }
+        this.returnDate = LocalDate.parse(date);
     }
 
     public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
 
+    @Override
     public boolean isReturned() {
         return returnDate != null;
+    }
+
+    // Borrowable interface methods
+    @Override
+    public void borrowBy(String readerId, String date) {
+        this.borrowDate = LocalDate.parse(date);
+    }
+
+    @Override
+    public void returnBook(String date) {
+        confirmReturn(date);
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return returnDate != null; // Available if returned
+    }
+
+    @Override
+    public String getBorrowerId() {
+        return reader != null ? reader.getReaderID() : "Unknown";
     }
 
     public void showSlip() {
@@ -47,3 +79,4 @@ public class BorrowSlip {
         System.out.println("Tinh trang: " + (returnDate != null ? "Da tra" : "Chua tra"));
     }
 }
+

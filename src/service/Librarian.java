@@ -37,7 +37,7 @@ public class Librarian {
             return null;
         }
 
-        BorrowSlip slip = new BorrowSlip(reader, book, borrowDate, returnDate);
+        BorrowSlip slip = new BorrowSlip(reader, book);
 
         // Cap nhat so luong sach doc gia muon va tru so luong sach trong kho
         reader.borrowOne();
@@ -51,7 +51,7 @@ public class Librarian {
     public void receiveBook(BorrowSlip slip, LocalDate returnDate) {
         
         // Lay ngay tra du kien tu phieu muon
-        LocalDate dueDate = slip.getReturnDate();
+        LocalDate dueDate = LocalDate.parse(slip.getReturnDate());
 
         // Tinh tien phat tu ngay du kien den ngay tra thuc te
         if (returnDate.isAfter(dueDate)) {

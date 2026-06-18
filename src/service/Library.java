@@ -9,8 +9,9 @@ import model.Reader;
 import model.BorrowSlip;
 import policy.LateFeePolicy;
 import policy.StandardFeePolicy;
+import service.Searchable;
 
-public class Library {
+public class Library implements Searchable {
     private final List<Book> books;
     private final List<Reader> readers;
     private final List<BorrowSlip> borrowSlips;
@@ -72,6 +73,32 @@ public class Library {
         return null;
     }
 
+    @Override
+    public List<Book> searchByTitle(String kw) {
+        String normalized = Searchable.normalizeKeyword(kw);
+        List<Book> result = new ArrayList<>();
+
+        for (Book book : books) {
+            if (Searchable.normalizeKeyword(book.getName()).contains(normalized)) {
+                result.add(book);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Book> searchByAuthor(String kw) {
+        String normalized = Searchable.normalizeKeyword(kw);
+        List<Book> result = new ArrayList<>();
+
+        for (Book book : books) {
+            if (Searchable.normalizeKeyword(book.getAuthor()).contains(normalized)) {
+                result.add(book);
+            }
+        }
+        return result;
+    }
+
     // Tìm phiếu mượn còn hạn
     public BorrowSlip findActiveBorrowSlip(String readerID, String bookID) {
         for (BorrowSlip slip : borrowSlips) {
@@ -90,7 +117,7 @@ public class Library {
 
         for (BorrowSlip slip : borrowSlips) {
             if (!slip.isReturned()) {
-                LocalDate dueDate = slip.getReturnDate();
+                LocalDate dueDate = LocalDate.parse(slip.getReturnDate());
                 if (dueDate.isBefore(currentDate)) {
                     result.add(slip);
                 }
